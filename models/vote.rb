@@ -7,7 +7,7 @@ class Vote < ActiveRecord::Base
   
   def totals
     Vote.find_by_sql("SELECT contestant_id, count(*) as total
-    FROM votes GROUP BY contestant_id ORDER BY contestant_id"
+    FROM votes GROUP BY contestant_id ORDER BY contestant_id")
   end
   
   def self.reset_all!
