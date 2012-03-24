@@ -25,13 +25,13 @@ get "/" do
   "OK"
 end
 
-get "/total" do
-  Vote.total.to_json rescue "no votes yet"
+get '/winner' do
+  Vote.count > 2 ? Vote.winner : "no votes yet"
 end
 
 post "/vote" do
   JSON.parse( params[:votes] ).each{|c| Vote.create(:contestant => c) }
-  "OK"
+  Vote.score.to_json
 end
 
 post "/reset" do
