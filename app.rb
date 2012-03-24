@@ -29,6 +29,10 @@ get '/winner' do
   Vote.count > 2 ? Vote.winner : "no votes yet"
 end
 
+get '/score' do
+  Vote.score.to_s
+end
+
 post "/vote" do
   JSON.parse( params[:votes] ).each{|c| Vote.create(:contestant => c) }
   Vote.score.to_json
