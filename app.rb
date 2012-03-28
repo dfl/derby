@@ -35,7 +35,7 @@ end
 
 post "/vote" do
   p params
-  JSON.parse( params[:votes] ).each_with_index{|c,i| Vote.create(:contestant => i+1) if c==1  }
+  params[:votes].split(",").map(&:to_i).each_with_index{|c,i| Vote.create(:contestant => i+1) if c==1  }
   Vote.score.to_json
 end
 
