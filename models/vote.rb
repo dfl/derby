@@ -16,8 +16,7 @@ class Vote < ActiveRecord::Base
     end
 
     def totals order="total DESC"
-      Vote.find_by_sql("SELECT contestant_id, count(*) as total
-      FROM votes GROUP BY contestant_id ORDER BY #{order}")
+      Vote.find_by_sql("SELECT contestant_id, count(*) as total FROM votes GROUP BY contestant_id ORDER BY #{order}")
     end
 
     def winner
