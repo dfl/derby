@@ -30,13 +30,13 @@ get '/winner' do
 end
 
 get '/score' do
-  Vote.score.to_s
+  Vote.score_hash.to_s
 end
 
 post "/vote" do
   p params
-  params[:votes].split(",").map(&:to_i).each_with_index{|c,i| Vote.create(:contestant => i+1) if c==1  }
-  Vote.score.to_json
+  Vote.parse( params[:votes] )
+  Vote.score_array.to_json
 end
 
 post "/reset" do
