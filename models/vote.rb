@@ -12,7 +12,7 @@ class Vote < ActiveRecord::Base
     end
 
     def parse votes
-      votes.split(",").map(&:to_i).each_with_index{|c,i| create(:contestant => i+1) if c==1  }
+      votes.split(",").map(&:to_i).each_with_index{|c,i| create(:contestant_id => i+1) if c==1  }
     end
 
     def totals order="total DESC"
