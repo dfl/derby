@@ -39,7 +39,7 @@ post "/vote" do
   Vote.score_array.to_json
 end
 
-post "/reset" do
+get "/reset" do
   protected!
   Vote.reset_all!
 end
