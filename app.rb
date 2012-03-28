@@ -42,3 +42,13 @@ post "/reset" do
   protected!
   Vote.reset_all!
 end
+
+get "/crossdomain.xml" do
+    <<-XML
+   <?xml version="1.0"?>
+	    <!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
+	    <cross-domain-policy>
+	      <allow-access-from domain="home.earthlink.net" />
+	    </cross-domain-policy> 
+	  XML
+end
