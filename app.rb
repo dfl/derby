@@ -42,6 +42,7 @@ end
 get "/reset" do
   protected!
   Vote.reset_all!
+  redirect "/score"
 end
 
 get "/crossdomain.xml" do
