@@ -50,7 +50,7 @@ get "/crossdomain.xml" do
    <?xml version="1.0"?>
 	    <!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
 	    <cross-domain-policy>
-	      <allow-access-from domain="home.earthlink.net" />
+	      <allow-access-from domain="dallasdivasderby.com" />
 	    </cross-domain-policy> 
 	  XML
 end
