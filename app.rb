@@ -36,7 +36,7 @@ end
 post "/vote" do
   p params
   Vote.parse( params[:votes] )
-  Vote.score_array.to_json
+  Vote.score_array.join(",")
 end
 
 get "/reset" do
