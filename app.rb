@@ -6,6 +6,7 @@ require 'json'
 set :database, ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/db/development.sqlite3"
 
 require './models/vote'
+require './models/question_vote'
 
 helpers do
   def protected!
@@ -44,6 +45,32 @@ get "/reset" do
   Vote.reset_all!
   redirect "/score"
 end
+
+
+post "/question/vote" do
+  p params
+  QuestionVote.parse( params[:votes] )
+  QuestionVote.score_array.join(",")
+end
+
+get '/question/score' do
+  QuestionVote.score_hash.to_s
+end
+
+get '/question/winner' do
+  QuestionVote.count > 2 ? QuestionVote.winner_to_s : "no votes yet"
+end
+
+get '/question/score' do
+  QuestionVote.score_hash.to_s
+end
+
+get "/question/reset" do
+  protected!
+  Vote.reset_all!
+  redirect "/question/score"
+end
+
 
 get "/crossdomain.xml" do
     <<-XML
