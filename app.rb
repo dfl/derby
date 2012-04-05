@@ -3,7 +3,12 @@ require "sinatra"
 require 'sinatra/activerecord'
 require 'json'
 
-set :database, ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/db/development.sqlite3"
+
+dbconfig = YAML.load(File.read("config/database.yml"))
+RACK_ENV ||= ENV["RACK_ENV"] || "development"
+ActiveRecord::Base.establish_connection dbconfig[RACK_ENV]
+ActiveRecord::Base.logger = Logger.new(File.open("log/#{RACK_ENV}.log", "a"))
+#set :database, ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/db/development.sqlite3"
 
 require './models/vote'
 require './models/question_vote'
