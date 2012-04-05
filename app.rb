@@ -31,19 +31,21 @@ get "/" do
   "OK"
 end
 
-get '/winner' do
-  Vote.count > 2 ? Vote.winner_to_s : "no votes yet"
+post "/vote" do
+  p params
+  Vote.parse( params[:votes] )
+  Vote.score_array.join(",")
 end
 
 get '/score' do
   Vote.score_hash.to_s
 end
 
-post "/vote" do
-  p params
-  Vote.parse( params[:votes] )
-  Vote.score_array.join(",")
+get '/winner' do
+  Vote.count > 2 ? Vote.winner_to_s : "no votes yet"
 end
+
+
 
 get "/reset" do
   protected!
@@ -66,13 +68,9 @@ get '/question/winner' do
   QuestionVote.count > 2 ? QuestionVote.winner_to_s : "no votes yet"
 end
 
-get '/question/score' do
-  QuestionVote.score_hash.to_s
-end
-
 get "/question/reset" do
   protected!
-  Vote.reset_all!
+  QuestionVote.reset_all!
   redirect "/question/score"
 end
 
