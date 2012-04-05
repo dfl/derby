@@ -22,6 +22,10 @@ class Vote < ActiveRecord::Base
     def winner
       totals.first
     end
+    
+    def winner_to_s
+      "contestant #{winner.contestant_id} got #{winner.total} votes"
+    end
 
     def reset_all!
       delete_all

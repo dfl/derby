@@ -26,7 +26,7 @@ get "/" do
 end
 
 get '/winner' do
-  Vote.count > 2 ? Vote.winner : "no votes yet"
+  Vote.count > 2 ? Vote.winner_to_s : "no votes yet"
 end
 
 get '/score' do
