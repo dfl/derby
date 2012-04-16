@@ -4,13 +4,14 @@ class QuestionVote < ActiveRecord::Base
   class << self
 
     def score_array
-      totals("question_id ASC").map(&:total)
+      score_hash.values
     end
 
     def score_hash
-      Hash[ totals.map{|v| [v.question_id, v.total]} ]
+      hash = Hash[ totals("question_id ASC").map{|v| [v.contestant_id, v.total]} ]
+      Hash[ (1..32).to_a.map{|a| [a,0 ]} ].merge( hash )
     end
-
+    
     def parse votes
       votes.split(",").map(&:to_i).each_with_index{|c,i| create(:question_id => i+1) if c==1  }
     end
