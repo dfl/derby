@@ -21,6 +21,11 @@ helpers do
     end
   end
 
+  def blocked_ip?
+    blocked = [ "108.57.32.181" ]
+    blocked.include? request.ip
+  end
+  
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin', 'dallas']
@@ -33,7 +38,7 @@ end
 
 post "/vote" do
   p params
-  Vote.parse( params[:votes] )
+  Vote.parse( params[:votes] ) unless blocked_ip?
   Vote.score_array.join(",")
 end
 
@@ -56,7 +61,7 @@ end
 
 post "/question/vote" do
   p params
-  QuestionVote.parse( params[:votes] )
+  QuestionVote.parse( params[:votes] ) unless blocked_ip?
   QuestionVote.score_array.join(",")
 end
 
