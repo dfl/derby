@@ -12,8 +12,8 @@ class Vote < ActiveRecord::Base
       Hash[ (1..32).to_a.map{|a| [a,0 ]} ].merge( hash )
     end
 
-    def parse votes
-      votes.split(",").map(&:to_i).each_with_index{|c,i| create(:contestant_id => i+1) if c==1  }
+    def parse votes, ip=nil
+      votes.split(",").map(&:to_i).each_with_index{|c,i| create(:contestant_id => i+1, :ip => ip) if c==1  }
     end
 
     def totals order="total DESC"

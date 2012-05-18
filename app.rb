@@ -21,11 +21,21 @@ helpers do
     end
   end
 
-  def blocked_ip?
-    blocked = [ "108.57.32.181" ]
-    blocked.include? request.ip
+  def blacklisted_ip?
+    # "75.6.249.153" David Warczak
+    blocked = [ "108.57.32.181", "76.249.234.217", "24.242.202.58", "208.114.151.167"]
+    blocked.include?( request.ip )
   end
   
+  def too_many? klass, max=5
+    case klass
+    when Vote, :votes
+      Vote.where( ["created_at > ? AND ip = ?", 1.hour.ago, request.ip] ).group("contestant_id").count.values.any?{|c| c > max}
+    when QuestionVote, :question_votes
+      QuestionVote.where( ["created_at > ? AND ip = ?", 1.hour.ago, request.ip] ).group("question_id").count.values.any?{|c| c > max}
+    end
+  end
+
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin', 'dallas']
@@ -38,7 +48,13 @@ end
 
 post "/vote" do
   p params
-  Vote.parse( params[:votes] ) unless blocked_ip?
+  if blacklisted_ip?
+    puts "attempt from blacklisted #{request.ip}"
+  elsif too_many?( Vote )
+    puts "attempt from blocked #{request.ip}"    
+  else
+    Vote.parse( params[:votes], request.ip )
+  end
   Vote.score_array.join(",")
 end
 
@@ -61,7 +77,13 @@ end
 
 post "/question/vote" do
   p params
-  QuestionVote.parse( params[:votes] ) unless blocked_ip?
+  if blacklisted_ip?
+    puts "attempt from blacklisted #{request.ip}"
+  elsif too_many?( QuestionVote )
+    puts "attempt from blocked #{request.ip}"
+  else
+    QuestionVote.parse( params[:votes], request.ip )
+  end
   QuestionVote.score_array.join(",")
 end
 
