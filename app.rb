@@ -28,12 +28,13 @@ helpers do
   end
   
   def too_many? klass, max=5
+    conditions = ["created_at > ? AND ip = ?", 1.day.ago, request.ip]
     case klass
     when Vote, :votes
-      Vote.where( ["created_at > ? AND ip = ?", 1.hour.ago, request.ip] ).group("contestant_id").count.values.any?{|c| c > max}
+      Vote.where( conditions ).group("contestant_id")
     when QuestionVote, :question_votes
-      QuestionVote.where( ["created_at > ? AND ip = ?", 1.hour.ago, request.ip] ).group("question_id").count.values.any?{|c| c > max}
-    end
+      QuestionVote.where( conditions ).group("question_id")
+    end.count.values.any?{|c| c > max}
   end
 
   def authorized?
