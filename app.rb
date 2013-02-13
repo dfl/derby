@@ -39,7 +39,7 @@ helpers do
 
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin', 'dallas']
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin2', 'season2']
   end
 end
 
