@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem 'rake'
 gem 'heroku'
+gem 'heroku-api'
 gem "sinatra"
 gem "racksh"
 gem 'activerecord'

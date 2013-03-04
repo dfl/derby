@@ -23,18 +23,20 @@ helpers do
 
   def blacklisted_ip?
     # "75.6.249.153" David Warczak
-    blocked = [ "108.57.32.181", "76.249.234.217", "24.242.202.58", "208.114.151.167"]
+    blocked = [] # "108.57.32.181", "76.249.234.217", "24.242.202.58", "208.114.151.167"]
     blocked.include?( request.ip )
   end
   
   def too_many? klass, max=5
     conditions = ["created_at > ? AND ip = ?", 1.day.ago, request.ip]
-    case klass
-    when Vote, :votes
-      Vote.where( conditions ).group("contestant_id")
-    when QuestionVote, :question_votes
-      QuestionVote.where( conditions ).group("question_id")
-    end.count.values.any?{|c| c > max}
+    collection = case klass
+                 when Vote, :votes
+                   Vote.where( conditions ).group("contestant_id")
+                 when QuestionVote, :question_votes
+                   QuestionVote.where( conditions ).group("question_id")
+                 end
+    return false if collection.blank?
+    collection.count.values.any?{|c| c > max}
   end
 
   def authorized?
